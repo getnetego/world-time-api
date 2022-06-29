@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-timeFlow" doc:id="9b76ea00-9852-41f9-8b22-c9f3e11f6cb0" >
+		<ee:transform doc:name="Set Response time" doc:id="f9c6fd59-53a5-40ce-a429-47ab3a7af949" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+  [
+    "date info" : {
+  		"today" : now() as Date,
+    
+   },
+   
+    "time info" : {
+		"AddisAbabaTime": (now() >> "Africa/Addis_Ababa") as LocalTime { format:"HH:mm:ss.SSS"},
+		"NewYorkTime": (now() >> "America/New_York") as Time { format:"HH:mm:ss.SSS"},
+		"LondonTime": ( now() >> "Europe/London") as Time { format:"HH:mm:ss.SSS"}
+    }
+  
+  ]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

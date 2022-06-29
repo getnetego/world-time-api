@@ -1,0 +1,8 @@
+%dw 2.0
+
+type auto_7f2f5d78_0daa_4c2e_83af_de7119766757_Output_Payload = {|
+  usersCity: Any, 
+  Minimum_temp: String, 
+  Maximum_temp: String
+|}
+
