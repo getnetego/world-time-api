@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	
+	<flow name="get-weatherFlow" doc:id="7f2f5d78-0daa-4c2e-83af-de7119766757" >
+		<set-variable value="#[attributes.queryParams.city-name]" doc:name="store-city" doc:id="8a1cb6f0-02a3-4394-a232-78ebef54aa2c" variableName="city"/>
+		<http:request method="GET" doc:name="calls-to-openWeather" doc:id="96248f4d-8a10-4ced-80e6-ad30a70c0cb0" config-ref="HTTP_Request_configuration" path="/weather">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	q : vars.city,
+	appid : "5b98ef27c9df9380c64abcebdf0b19f2"
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Log immediate api result" doc:id="107cb800-5fe9-43f3-8d41-5e7d8642634b" message="original payload is #[payload]" />
+		<ee:transform doc:name="Kelvin to Celsius" doc:id="2824a78d-42a3-476d-85a9-32fa7f2843ac">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{   usersCity: vars.city as String ++ " , " ++ payload.sys.country,
+	Minimum_temp : (payload.main.temp_min as Number - 273.15) as String ++ " Celsius",
+	Maximum_temp : (payload.main.temp_max as Number - 273.15) as String ++ " Celsius"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
