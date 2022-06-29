@@ -1,0 +1,69 @@
+#%RAML 1.0
+title: world-date-time-api
+version: 1.0
+description: This API is designed to show steps of API development life cycle from start to finish.
+
+/time-teller:
+  description: This time API resource is an Endpoint for current date and time for selected cities around a world
+  get:
+    description: returns current date and time
+    displayName: get current time and date
+    responses:
+      200:
+        body:
+          application/json:
+            examples:
+              output:
+                [
+                { "date info" : {
+                  "today" : "2019-04-21"
+
+                  }
+                },
+                {
+                  "time info" : {
+                  "AddisAbabaTime": "18:02:05.738",
+                  "NewYorkTime": "10:55:45.932",
+                  "LondonTime": "15:57:45.174"
+                  }
+                }
+                ]
+  post: 
+    body:
+      application/json:
+        examples: 
+          input : !include examples/postUserNameExample.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              message : "Hello Dear user, Getnet Adewo"
+
+/weather-teller:
+  get:
+    queryParameters:
+        city-name:
+          type: string
+          required: true
+    responses:
+      200:
+        body:
+          application/json:
+            examples:
+              output: !include examples/getCityWeatherExample.raml
+  delete:
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              message : "You should be an Admin to perform delete operation"
+                              
+      
+
+  
+    
+
+          
+      
